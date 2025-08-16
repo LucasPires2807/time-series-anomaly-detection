@@ -1,0 +1,24 @@
+services:
+  postgres:
+    image: postgres:17
+    env_file:
+      - .env
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./app/config/db/init:/docker-entrypoint-initdb.d
+    restart: on-failure
+  gunicorn:
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+    env_file:
+      - .env
+    restart: on-failure
+    depends_on:
+      - postgres
+
+volumes:
+  postgres_data:
+  app:

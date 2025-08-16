@@ -1,8 +1,7 @@
 from http import HTTPStatus
 from fastapi import APIRouter, Depends
 
-from app.manager_singleton import get_model_manager
-from app.model_manager import ModelManager
+from app.model_manager import ModelManager, get_model_manager
 from app.schema import DataPoint
 
 router = APIRouter(tags=["Prediction"])

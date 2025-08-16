@@ -1,6 +1,16 @@
-# Project startup
+# Project Startup
 
-## Install uv
+## Running with Docker
+
+- **Build and start the containers:**
+   ```sh
+   docker compose up --build
+
+Access ```0.0.0.0:8000/docs```
+
+## Running without container
+
+### Install uv
 
 - Mac/Linux:
     - Use curl to download the script and execute it with sh:
@@ -21,7 +31,7 @@
         `powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/0.8.11/install.p`
 
 
-## Running without container
+### Run the project
 
 - Install the dependencies
 
