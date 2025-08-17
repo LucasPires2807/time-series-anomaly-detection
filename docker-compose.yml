@@ -6,11 +6,16 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./app/config/db/init:/docker-entrypoint-initdb.d
+    networks:
+      - app-net
     restart: on-failure
   gunicorn:
     build: .
     ports:
       - "8000:8000"
+    networks:
+      - app-net
+      - monitoring-net
     volumes:
       - .:/app
     env_file:
@@ -22,3 +27,10 @@ services:
 volumes:
   postgres_data:
   app:
+
+
+networks:
+  app-net:
+    driver: bridge
+  monitoring-net:
+    external: true
