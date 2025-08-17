@@ -2,7 +2,7 @@ from http import HTTPStatus
 import uuid
 from fastapi import HTTPException
 from sqlalchemy.exc import IntegrityError
-from sqlalchemy import select
+from sqlalchemy import select, func
 from app.config.db.models import DataPoint, ModelVersion, TimeSeries
 from sqlalchemy.orm import Session
 
@@ -53,25 +53,35 @@ class ModelRepository:
         result = self.session.execute(query).scalar()
         return result
 
-    def get_model_last_version(self, series_id: str) -> str:
+    def get_next_version(self, time_series_id: uuid.UUID) -> str:
         query = (
-            select(ModelVersion.version)
-            .join(TimeSeries, ModelVersion.time_series_id == TimeSeries.id)
-            .where(TimeSeries.series_id == series_id)
-            .order_by(ModelVersion.created_at.desc())
+            select(func.max(ModelVersion.version))
+            .where(ModelVersion.time_series_id == time_series_id)
+            .with_for_update()
         )
         result = self.session.execute(query).scalar()
-        return result
+        if result is None:
+            return "v1"
+        number = int(result[1:])
+        return f"v{number + 1}"
 
-    def add_model(self, model: AnomalyDetectionModel, series_id: str, version: str):
-        model = ModelVersion(
-            time_series_id=series_id,
-            version=version,
-            mean=model.mean,
-            std=model.std
-        )
-        self.session.add(model)
-        self.session.commit()
+    def add_model(self, model: AnomalyDetectionModel, time_series_id: uuid.UUID) -> str:
+        version = ""
+        if not time_series_id:
+            raise HTTPException(
+                status_code=HTTPStatus.NOT_FOUND,
+                detail=f"Time series with ID {series_id} not found."
+            )
+        with self.session.begin():
+            version = version or self.get_next_version(time_series_id)
+            model = ModelVersion(
+                time_series_id=time_series_id,
+                version=version,
+                mean=model.mean,
+                std=model.std
+            )
+            self.session.add(model)
+        return version
 
     def get_model(self, series_id: str, version: str) -> AnomalyDetectionModel:
         query = (
