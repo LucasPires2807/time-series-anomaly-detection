@@ -1,12 +1,43 @@
 # Project Startup
 
+This document provides instructions for setting up and running the project, both with and without Docker containers.
+
 ## Running with Docker
 
-- **Build and start the containers:**
-   ```sh
-   docker compose up --build
+Follow these steps to run the application and the monitoring stack using Docker Compose.
 
-Access ```0.0.0.0:8000/docs```
+### 1. Application
+
+- **Build and start the main application container:**
+   ```sh
+   docker compose up --build -d
+   ```
+
+2. Monitoring with Prometheus and Grafana
+
+The monitoring stack, defined in `docker-compose-monitoring.yml`, runs alongside the main application.
+
+- Create the shared Docker network (only needs to be done once):
+
+    ```sh
+    docker network create monitoring-net
+    ```
+
+- Start the monitoring services (Prometheus and Grafana) in detached mode:
+
+    ```sh
+    docker compose -f docker-compose-monitoring.yml up -d
+    ```
+
+- Access the services:
+
+    - Prometheus: View metrics and targets at `http://localhost:9090`.
+
+    - Grafana: Visualize data and build dashboards at `http://localhost:3000`.
+
+        - Login: `admin`
+
+        - Password: `admin`
 
 ## Running without container
 
