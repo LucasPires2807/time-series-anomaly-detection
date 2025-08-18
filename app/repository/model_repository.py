@@ -55,8 +55,10 @@ class ModelRepository:
 
     def get_next_version(self, time_series_id: uuid.UUID) -> str:
         query = (
-            select(func.max(ModelVersion.version))
+            select(ModelVersion.version)
             .where(ModelVersion.time_series_id == time_series_id)
+            .order_by(ModelVersion.version.desc())
+            .limit(1)
             .with_for_update()
         )
         result = self.session.execute(query).scalar()
@@ -73,14 +75,17 @@ class ModelRepository:
                 detail=f"Time series with ID {series_id} not found."
             )
         with self.session.begin():
-            version = version or self.get_next_version(time_series_id)
-            model = ModelVersion(
-                time_series_id=time_series_id,
-                version=version,
-                mean=model.mean,
-                std=model.std
-            )
-            self.session.add(model)
+            try:
+                version = version or self.get_next_version(time_series_id)
+                model = ModelVersion(
+                    time_series_id=time_series_id,
+                    version=version,
+                    mean=model.mean,
+                    std=model.std
+                )
+                self.session.add(model)
+            except Exception as e:
+                raise e
         return version
 
     def get_model(self, series_id: str, version: str) -> AnomalyDetectionModel:

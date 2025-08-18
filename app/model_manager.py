@@ -36,7 +36,7 @@ class ModelManager:
         )
         version = self._repository.add_model(
             model,
-            series_id=time_series_db_id,
+            time_series_id=time_series_db_id,
         )
 
         return {
