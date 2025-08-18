@@ -17,7 +17,7 @@ class ModelManager:
         self._repository = ModelRepository(session=session)
 
 
-    def fit(self, series_id: str, time_series: TimeSeries):
+    async def fit(self, series_id: str, time_series: TimeSeries):
         model = AnomalyDetectionModel()
         model.fit(time_series)
 
@@ -26,15 +26,15 @@ class ModelManager:
                 status_code=HTTPStatus.BAD_REQUEST,
                 detail="Time series data is empty."
             )
-        time_series_db_id = self._repository.get_series_db_id(series_id)
+        time_series_db_id = await self._repository.get_series_db_id(series_id)
         if not time_series_db_id:
-            time_series_db_id = self._repository.create_time_series(series_id).id
+            time_series_db_id = (await self._repository.create_time_series(series_id)).id
 
-        self._repository.add_data_point(
+        await self._repository.add_data_point(
             data_point=time_series,
             time_series_id=time_series_db_id
         )
-        version = self._repository.add_model(
+        version = await self._repository.add_model(
             model,
             time_series_id=time_series_db_id,
         )
@@ -45,8 +45,8 @@ class ModelManager:
             "points_used": len(time_series.data)
         }
 
-    def predict(self, series_id: str, version: str, data_point: DataPoint):
-        model = self._repository.get_model(series_id, version)
+    async def predict(self, series_id: str, version: str, data_point: DataPoint):
+        model = await self._repository.get_model(series_id, version)
         if not model:
             raise HTTPException(
                 status_code=HTTPStatus.NOT_FOUND,

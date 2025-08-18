@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS time_series (
 CREATE TABLE IF NOT EXISTS data_points (
     id UUID NOT NULL PRIMARY KEY DEFAULT uuid_generate_v4(),
     time_series_id UUID REFERENCES time_series(id) ON DELETE CASCADE,
-    timestamp TEXT NOT NULL,
+    timestamp INT NOT NULL,
     value DOUBLE PRECISION NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

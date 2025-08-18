@@ -1,5 +1,5 @@
 import uuid
-from sqlalchemy import String, Text, Float, ForeignKey, DateTime, UniqueConstraint, func
+from sqlalchemy import String, Text, Float, ForeignKey, DateTime, UniqueConstraint, func, Integer
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
 class Base(DeclarativeBase):
@@ -29,7 +29,7 @@ class DataPoint(Base):
 
     id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
     time_series_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("time_series.id", ondelete="CASCADE"), nullable=False)
-    timestamp: Mapped[str] = mapped_column(Text, nullable=False)
+    timestamp: Mapped[int] = mapped_column(Integer, nullable=False)
     value: Mapped[float] = mapped_column(Float, nullable=False)
     created_at: Mapped[DateTime] = mapped_column(DateTime, server_default=func.now())
     updated_at: Mapped[DateTime] = mapped_column(DateTime, server_default=func.now(), onupdate=func.now())

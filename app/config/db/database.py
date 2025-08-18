@@ -1,22 +1,26 @@
-from typing import Generator
-from sqlalchemy import NullPool, create_engine
-from sqlalchemy.orm import sessionmaker, Session
+from sqlalchemy.ext.asyncio import (
+    AsyncSession,
+    async_sessionmaker,
+    create_async_engine,
+)
 from app.config.settings import get_settings
 
 settings = get_settings()
 
-engine = create_engine(
+engine = create_async_engine(
     settings.database_url,
     echo=False,
-    poolclass=NullPool,
+    pool_size=2,
+    max_overflow=0,
+    pool_timeout=120,
 )
 
-session_maker = sessionmaker(bind=engine)
+async_session_maker = async_sessionmaker(engine, expire_on_commit=False)
 
-def get_db() -> Generator[Session, None, None]:
-    with session_maker() as db:
+async def get_db() -> AsyncSession:
+    async with async_session_maker() as db:
         try:
             yield db
         except Exception as e:
-            db.rollback()
+            await db.rollback()
             raise e

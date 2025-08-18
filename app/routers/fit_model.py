@@ -7,9 +7,9 @@ from app.schema import TimeSeries
 router = APIRouter(tags=["Training"])
 
 @router.post("/fit/{series_id}", status_code=HTTPStatus.CREATED)
-def fit_series(
+async def fit_series(
     series_id: str,
     time_series: TimeSeries,
     manager: ModelManager = Depends(get_model_manager)
 ):
-    return manager.fit(series_id=series_id, time_series=time_series)
+    return await manager.fit(series_id=series_id, time_series=time_series)

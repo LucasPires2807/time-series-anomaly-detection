@@ -2,15 +2,13 @@ from http import HTTPStatus
 from fastapi import HTTPException
 from typing import Sequence
 
-from pydantic import BaseModel, Field, validator, model_validator
-from datetime import datetime
-
+from pydantic import BaseModel, Field, field_validator, model_validator
 
 class DataPoint(BaseModel):
     timestamp: int = Field(..., description="Unix timestamp of the time the data point was collected")
     value: float = Field(..., description="Value of the time series measured at time `timestamp`")
 
-    @validator("timestamp")
+    @field_validator("timestamp")
     def validate_timestamp(cls, v):
         if v < 0:
             raise HTTPException(
