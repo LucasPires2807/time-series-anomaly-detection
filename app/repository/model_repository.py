@@ -7,7 +7,7 @@ from app.config.db.models import DataPoint, ModelVersion, TimeSeries
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.model import AnomalyDetectionModel
-from app.schema import TimeSeries as TimeSeriesSchema
+from app.schemas.schema import TimeSeries as TimeSeriesSchema
 
 class ModelRepository:
     def __init__(self, session: AsyncSession):

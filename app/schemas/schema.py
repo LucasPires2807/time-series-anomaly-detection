@@ -57,3 +57,9 @@ class TimeSeries(BaseModel):
 
         values.data = sorted(data, key=lambda dp: dp.timestamp)
         return values
+
+class LoadTestRequest(BaseModel):
+    base_url: str = "http://localhost:8000"
+    concurrent_requests: int = 50
+    requests_per_user: int = 100
+

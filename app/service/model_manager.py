@@ -8,7 +8,7 @@ from sqlalchemy.orm import Session
 
 from app.config.db.database import get_db
 from app.repository.model_repository import ModelRepository
-from app.schema import DataPoint, TimeSeries
+from app.schemas.schema import DataPoint, TimeSeries
 from app.model import AnomalyDetectionModel
 
 

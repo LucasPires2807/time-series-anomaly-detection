@@ -1,12 +1,13 @@
 from http import HTTPStatus
 from fastapi import APIRouter, Depends
 
+from app.schemas.response_schema import PredictResponse
 from app.service.model_manager import ModelManager, get_model_manager
-from app.schema import DataPoint
+from app.schemas.schema import DataPoint
 
 router = APIRouter(tags=["Prediction"])
 
-@router.post("/predict/{series_id}", status_code=HTTPStatus.OK)
+@router.post("/predict/{series_id}", status_code=HTTPStatus.OK, response_model=PredictResponse)
 async def predict(
     series_id: str,
     data_point: DataPoint,

@@ -1,6 +1,6 @@
 import numpy as np
 
-from app.schema import DataPoint, TimeSeries
+from app.schemas.schema import DataPoint, TimeSeries
 
 class AnomalyDetectionModel:
 
