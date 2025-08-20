@@ -23,6 +23,8 @@ The monitoring stack, defined in `docker-compose-monitoring.yml`, runs alongside
     docker network create monitoring-net
     ```
 
+- Access `http://localhost:8000/docs` to see the API documentation.
+
 - Start the monitoring services (Prometheus and Grafana) in detached mode:
 
     ```sh
@@ -77,3 +79,45 @@ The monitoring stack, defined in `docker-compose-monitoring.yml`, runs alongside
 - Run the project
 
 `uv run gunicorn -c gunicorn.conf.py`
+
+
+### Sample training and prediction requests
+
+**For training you can use:**
+
+- series_id: `series_1`
+- At the request body you can use
+```
+{
+  "data": [
+    { "timestamp": 0, "value": 0 },
+    { "timestamp": 1, "value": 1 },
+    { "timestamp": 2, "value": 2 },
+    { "timestamp": 3, "value": 3 },
+    { "timestamp": 4, "value": 4 },
+    { "timestamp": 5, "value": 5 },
+    { "timestamp": 6, "value": 6 },
+    { "timestamp": 7, "value": 7 },
+    { "timestamp": 8, "value": 8 },
+    { "timestamp": 9, "value": 9 }
+  ]
+}
+```
+
+**For prediction you can use:**
+
+- series_id: `series_1`
+- version: `v1`
+- At the request body you can use
+```
+{
+  "timestamp": 0,
+  "value": 0
+}
+```
+
+**For plot you can use:**
+
+- series_id: `series_1`
+- version: `v1`
+
