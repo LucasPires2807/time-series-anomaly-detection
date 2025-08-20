@@ -12,6 +12,7 @@ Follow these steps to run the application and the monitoring stack using Docker 
    ```sh
    docker compose up --build -d
    ```
+- Access `http://localhost:8000/docs` to see the API documentation.
 
 2. Monitoring with Prometheus and Grafana
 
@@ -22,8 +23,6 @@ The monitoring stack, defined in `docker-compose-monitoring.yml`, runs alongside
     ```sh
     docker network create monitoring-net
     ```
-
-- Access `http://localhost:8000/docs` to see the API documentation.
 
 - Start the monitoring services (Prometheus and Grafana) in detached mode:
 
